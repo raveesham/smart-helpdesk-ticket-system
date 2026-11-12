@@ -1,0 +1,10 @@
+# Trivy config starter. CLI flags in Jenkins are authoritative.
+severity:
+  - HIGH
+  - CRITICAL
+ignore-unfixed: false
+exit-code: 1
+scanners:
+  - vuln
+  - misconfig
+  - secret

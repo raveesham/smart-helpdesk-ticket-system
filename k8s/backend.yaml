@@ -1,0 +1,44 @@
+# Placeholder image names and port; align with upstream after reconnaissance.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helpdesk-backend
+  namespace: helpdesk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helpdesk-backend
+  template:
+    metadata:
+      labels:
+        app: helpdesk-backend
+    spec:
+      containers:
+        - name: backend
+          image: YOUR_DOCKERHUB_USER/smart-helpdesk-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: helpdesk-config
+            - secretRef:
+                name: helpdesk-secret
+          # Update these paths to real FastAPI health endpoints.
+          # readinessProbe:
+          #   httpGet: { path: /health, port: 8000 }
+          # livenessProbe:
+          #   httpGet: { path: /health, port: 8000 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helpdesk-backend
+  namespace: helpdesk
+spec:
+  selector:
+    app: helpdesk-backend
+  ports:
+    - port: 8000
+      targetPort: 8000

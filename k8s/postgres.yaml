@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: helpdesk-postgres
+  namespace: helpdesk
+spec:
+  serviceName: helpdesk-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helpdesk-postgres
+  template:
+    metadata:
+      labels:
+        app: helpdesk-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: helpdesk
+            - name: POSTGRES_USER
+              value: helpdesk
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: helpdesk-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helpdesk-postgres
+  namespace: helpdesk
+spec:
+  selector:
+    app: helpdesk-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

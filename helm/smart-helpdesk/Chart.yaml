@@ -1,0 +1,6 @@
+apiVersion: v2
+name: smart-helpdesk
+description: Smart Helpdesk app deployment starter
+type: application
+version: 0.1.0
+appVersion: "demo"

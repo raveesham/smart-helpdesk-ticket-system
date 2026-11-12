@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: helpdesk-config
+  namespace: helpdesk
+data:
+  # Replace with upstream's real configuration variable names.
+  NEXT_PUBLIC_API_URL: "http://localhost:8000"
+  APP_ENV: "demo"

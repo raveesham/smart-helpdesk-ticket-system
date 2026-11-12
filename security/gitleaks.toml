@@ -1,0 +1,7 @@
+title = "Smart Helpdesk Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+# Add project-specific allowlists only for verified false positives.
+# Never allowlist real credentials or secret files.

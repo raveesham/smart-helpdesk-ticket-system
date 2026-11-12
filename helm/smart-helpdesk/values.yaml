@@ -1,0 +1,21 @@
+namespace: helpdesk
+frontend:
+  replicaCount: 1
+  repository: YOUR_DOCKERHUB_USER/smart-helpdesk-frontend
+  tag: latest
+  port: 3000
+backend:
+  replicaCount: 1
+  repository: YOUR_DOCKERHUB_USER/smart-helpdesk-backend
+  tag: latest
+  port: 8000
+postgres:
+  image: postgres:16
+  database: helpdesk
+  username: helpdesk
+  # Set password through Kubernetes Secret, not here.
+service:
+  type: ClusterIP
+config:
+  # Must match upstream frontend runtime/build-time env behavior.
+  apiUrl: http://helpdesk-backend:8000
