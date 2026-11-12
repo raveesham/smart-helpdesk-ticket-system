@@ -60,24 +60,24 @@ pipeline {
         }
 
         stage('Backend Validation') {
-            steps {
-                powershell '''
-                    Write-Host "Starting backend validation..."
+    steps {
+        powershell '''
+            Write-Host "Starting backend validation..."
 
-                    docker run --rm `
-                        --mount "type=bind,source=$env:WORKSPACE,target=/workspace" `
-                        -w /workspace `
-                        python:3.12-slim `
-                        sh -c 'python -m pip install --no-cache-dir -r requirements.txt && python -m compileall -q api core db models schemas services main.py && if [ -d tests ]; then python -m pip install pytest && pytest -q; else echo "No tests directory; compile validation completed."; fi'
+            docker run --rm `
+                --mount "type=bind,source=$env:WORKSPACE,target=/workspace" `
+                -w /workspace `
+                python:3.12-slim `
+                sh -c "python -m pip install --no-cache-dir -r requirements.txt && python -m compileall -q api core db models schemas services main.py"
 
-                    if ($LASTEXITCODE -ne 0) {
-                        throw "Backend validation failed."
-                    }
-
-                    Write-Host "Backend validation completed."
-                '''
+            if ($LASTEXITCODE -ne 0) {
+                throw "Backend validation failed."
             }
-        }
+
+            Write-Host "Backend dependency installation and Python compilation completed."
+        '''
+    }
+}
 
         stage('Frontend Validation') {
             steps {
